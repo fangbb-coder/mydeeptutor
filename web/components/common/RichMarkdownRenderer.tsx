@@ -111,10 +111,13 @@ export default function RichMarkdownRenderer({
   // blocks, collapses runs of blank lines, etc, all of which shift line
   // numbers and break that contract. In that mode we forward the raw text
   // straight to react-markdown so AST positions stay faithful.
-  const normalizedContent = useMemo(
-    () => (trackSourceLines ? content : normalizeMarkdownForDisplay(content)),
-    [content, trackSourceLines],
-  );
+  const normalizedContent = useMemo(() => {
+    if (trackSourceLines) return content;
+    const stripped = content
+      .replace(/<think>[\s\S]*?<\/think>/g, "")
+      .replace(/<thought>[\s\S]*?<\/thought>/g, "");
+    return normalizeMarkdownForDisplay(stripped);
+  }, [content, trackSourceLines]);
   const [plugins, setPlugins] = useState<PluginBundle>({});
   const isTrace = variant === "trace";
   const gap = isTrace ? "my-1" : variant === "compact" ? "my-2" : "my-4";

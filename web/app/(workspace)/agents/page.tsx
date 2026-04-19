@@ -727,8 +727,17 @@ function BotsTab({
   };
 
   const botId = useMemo(() => {
-    const slug = formName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    return slug || "";
+    const slug = formName.trim().toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, "-").replace(/^-|-$/g, "");
+    if (slug) return slug;
+    if (formName.trim()) {
+      let hash = 0;
+      for (let i = 0; i < formName.trim().length; i++) {
+        hash = ((hash << 5) - hash) + formName.trim().charCodeAt(i);
+        hash |= 0;
+      }
+      return "bot-" + Math.abs(hash).toString(36);
+    }
+    return "";
   }, [formName]);
 
   const selectSoul = (id: string) => {
