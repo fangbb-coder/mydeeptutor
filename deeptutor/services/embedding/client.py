@@ -60,7 +60,7 @@ class EmbeddingClient:
         )
 
     async def embed(
-        self, texts: List[str], progress_callback=None
+        self, texts: List[str], progress_callback=None, input_type: Optional[str] = None
     ) -> List[List[float]]:
         if not texts:
             return []
@@ -79,6 +79,7 @@ class EmbeddingClient:
                     texts=batch,
                     model=self.config.model,
                     dimensions=self.config.dim,
+                    input_type=input_type,
                 )
                 response = await self.adapter.embed(request)
                 all_embeddings.extend(response.embeddings)

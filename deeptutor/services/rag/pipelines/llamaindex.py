@@ -73,18 +73,18 @@ class CustomEmbedding(BaseEmbedding):
 
     async def _aget_query_embedding(self, query: str) -> List[float]:
         """Get embedding for a query."""
-        embeddings = await self._client.embed([query])
+        embeddings = await self._client.embed([query], input_type="search_query")
         return embeddings[0]
 
     async def _aget_text_embedding(self, text: str) -> List[float]:
         """Get embedding for a text."""
-        embeddings = await self._client.embed([text])
+        embeddings = await self._client.embed([text], input_type="search_document")
         return embeddings[0]
 
     async def _aget_text_embeddings(self, texts: List[str]) -> List[List[float]]:
         """Get embeddings for multiple texts."""
         return await self._client.embed(
-            texts, progress_callback=self._progress_callback
+            texts, progress_callback=self._progress_callback, input_type="search_document"
         )
 
     def _get_query_embedding(self, query: str) -> List[float]:
@@ -143,7 +143,7 @@ class LlamaIndexPipeline:
         self.logger.info("Verifying embedding API connectivity...")
         try:
             client = get_embedding_client()
-            result = await client.embed(["connectivity test"])
+            result = await client.embed(["connectivity test"], input_type="search_query")
             if not result or not result[0]:
                 raise RuntimeError("Embedding API returned empty result")
             self.logger.info(

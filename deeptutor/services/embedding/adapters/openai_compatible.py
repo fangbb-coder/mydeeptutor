@@ -119,6 +119,8 @@ class OpenAICompatibleEmbeddingAdapter(BaseEmbeddingAdapter):
 
         if request.dimensions or self.dimensions:
             payload["dimensions"] = request.dimensions or self.dimensions
+        if request.input_type:
+            payload["input_type"] = request.input_type
 
         base = self.base_url.rstrip('/')
         if base.endswith('/embeddings'):
