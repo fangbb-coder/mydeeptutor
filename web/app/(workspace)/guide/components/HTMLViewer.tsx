@@ -34,9 +34,10 @@ export default function HTMLViewer({
   const sanitizeHtml = (rawHtml: string) =>
     rawHtml
       .replace(/<script(?![^>]*katex)[\s\S]*?>[\s\S]*?<\/script>/gi, "")
-      .replace(/\son[a-z]+\s*=\s*(['"]).*?\1/gi, (match) => {
-        if (/onload\s*=\s*(['"])renderMathInElement/i.test(match)) return match;
-        return "";
+      .replace(/\son([a-z]+)\s*=\s*(['"]).*?\2/gi, (match, eventName) => {
+        if (/^onload\s*=\s*(['"])renderMathInElement/i.test(match)) return match;
+        const allowed = ["click", "change", "input", "submit", "keydown", "keyup", "keypress", "focus", "blur", "mouseover", "mouseout"];
+        return allowed.includes(eventName.toLowerCase()) ? match : "";
       })
       .replace(/\s(href|src)\s*=\s*(['"])javascript:[\s\S]*?\2/gi, "");
 
@@ -181,7 +182,7 @@ export default function HTMLViewer({
         ref={htmlFrameRef}
         className="w-full flex-1 border-0"
         title={t("Interactive Learning Content")}
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts allow-same-origin allow-forms"
       />
     </div>
   );

@@ -5,6 +5,9 @@ const nextConfig = {
   // This eliminates the need to copy the full node_modules into Docker production images
   output: "standalone",
 
+  // Allow dev origins for cross-origin HMR
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
+
   // Move dev indicator to bottom-right corner
   devIndicators: {
     position: "bottom-right",
