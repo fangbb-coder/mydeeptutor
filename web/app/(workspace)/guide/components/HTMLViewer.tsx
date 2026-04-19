@@ -33,7 +33,11 @@ export default function HTMLViewer({
 
   const sanitizeHtml = (rawHtml: string) =>
     rawHtml
-      .replace(/<script(?![^>]*katex)[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+      .replace(/<script[\s\S]*?<\/script>/gi, (match) => {
+        if (/katex/i.test(match)) return match;
+        if (/eval\(|document\.write\s*\(|setTimeout\s*\(\s*['"]|setInterval\s*\(\s*['"]/.test(match)) return "";
+        return match;
+      })
       .replace(/\son([a-z]+)\s*=\s*(['"]).*?\2/gi, (match, eventName) => {
         if (/^onload\s*=\s*(['"])renderMathInElement/i.test(match)) return match;
         const allowed = ["click", "change", "input", "submit", "keydown", "keyup", "keypress", "focus", "blur", "mouseover", "mouseout"];

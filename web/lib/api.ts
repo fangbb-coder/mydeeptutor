@@ -2,7 +2,7 @@
 
 // Get API base URL from environment variable.
 // The launcher injects NEXT_PUBLIC_API_BASE from the canonical project-root `.env`.
-export const API_BASE_URL = "http://localhost:8003";
+export const API_BASE_URL = "http://localhost:8001";
 
 /**
  * Construct a full API URL from a path
